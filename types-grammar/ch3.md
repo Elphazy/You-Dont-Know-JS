@@ -189,7 +189,96 @@ Some of the methods defined on `Array.prototype` -- for example, `push(..)`, `po
 
 ## Regular Expressions
 
-// TODO
+A regular expression (or "regex") is an object that represents a pattern for matching character combinations in strings. Regular expressions are a powerful tool for searching, replacing, and validating text.
+
+Creating Regular Expressions
+
+There are two ways to create a RegExp object:
+
+```js
+// Literal form (preferred for static patterns)
+let pattern1 = /hello/i;
+
+// Constructor form (useful for dynamic patterns)
+let pattern2 = new RegExp("hello", "i");
+```
+
+The literal form is more performant and readable when the pattern is known at write-time. The constructor form is necessary when the pattern is built dynamically from strings.
+
+Flags
+
+Flags are optional modifiers that change how matching behaves:
+
+| Flag | Name | Description |
+|------|------|-------------|
+| `g` | Global | Find all matches, not just the first |
+| `i` | Case-insensitive | Case-insensitive matching |
+| `m` | Multiline | Treats `^` and `$` as matching line boundaries |
+| `u` | Unicode | Treat pattern as Unicode code points |
+| `y` | Sticky | Matches only from `lastIndex` property |
+
+Key Methods
+
+The .test() method returns true if a match exists:
+
+```js
+let pattern = /world/;
+pattern.test("hello world");  // true
+pattern.test("hello there");  // false
+```
+
+The .exec() method returns match details or null:
+
+```js
+let pattern = /(\d+)-(\d+)/;
+let result = pattern.exec("My number is 123-4567");
+
+console.log(result[0]);   // "123-4567" (full match)
+console.log(result[1]);   // "123" (first capture group)
+console.log(result[2]);   // "4567" (second capture group)
+console.log(result.index); // 13 (match position)
+```
+
+Properties
+
+Every RegExp instance has these properties:
+
+```js
+let pattern = /hello/gi;
+console.log(pattern.source);    // "hello" (pattern text)
+console.log(pattern.flags);     // "gi" (flags as string)
+console.log(pattern.global);    // true (has g flag?)
+console.log(pattern.ignoreCase); // true (has i flag?)
+console.log(pattern.lastIndex);  // 0 (position to start next search)
+```
+
+The lastIndex property is especially important with the g flag:
+
+```js
+let pattern = /a/g;
+let str = "abracadabra";
+
+console.log(pattern.test(str));  // true (matches at index 0)
+console.log(pattern.lastIndex);  // 1 (starts next search after index 0)
+console.log(pattern.test(str));  // true (matches at index 3)
+console.log(pattern.lastIndex);  // 4
+```
+
+When to Use Literal vs. Constructor
+
+Use literal form Use constructor form
+Pattern is known at development time Pattern comes from user input
+Better performance Need to interpolate variables
+Cleaner syntax / characters need escaping anyway
+
+```js
+// Dynamic pattern example
+let userInput = "foo";
+let dynamicPattern = new RegExp(userInput, "i");
+dynamicPattern.test("FOO");  // true
+```
+
+Regular expressions are a deep topic. This section covers the object nature of RegExp instances; for advanced pattern syntax, refer to MDN's Regular Expression documentation.
 
 ## Functions
 
