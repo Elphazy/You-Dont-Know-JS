@@ -282,7 +282,118 @@ Regular expressions are a deep topic. This section covers the object nature of R
 
 ## Functions
 
-// TODO
+Functions in JavaScript are a special type of object. They are callable objects — meaning they have all the capabilities of objects (properties, methods, etc.) but can also be invoked as functions.
+
+Functions as Objects
+
+Because functions are objects, you can attach properties to them:
+
+```js
+function greet(name) {
+    return `Hello, ${name}!`;
+}
+
+greet.language = "English";
+greet.description = "A simple greeting function";
+
+console.log(greet.language);      // "English"
+console.log(greet.description);   // "A simple greeting function"
+```
+
+This is a powerful feature that enables techniques like memoization and function configuration.
+
+Function Declarations vs. Expressions
+
+There are two primary ways to create functions:
+
+```js
+// Function declaration (hoisted)
+function add(a, b) {
+    return a + b;
+}
+
+// Function expression (not hoisted)
+const subtract = function(a, b) {
+    return a - b;
+};
+```
+
+Function declarations are hoisted, meaning they can be called before they appear in the code. Function expressions behave like any other variable assignment.
+
+The function Keyword as a Native
+
+The function keyword is a built-in native constructor:
+
+```js
+// Using the Function constructor (rarely needed)
+const multiply = new Function("a", "b", "return a * b");
+console.log(multiply(3, 4));  // 12
+```
+
+You almost never need the Function constructor. It has security implications (similar to eval()) and is significantly slower than function declarations or expressions.
+
+Methods vs. Standalone Functions
+
+When a function is a property of an object, it's called a method:
+
+```js
+const calculator = {
+    value: 0,
+    // Method (attached to calculator)
+    add(n) {
+        this.value += n;
+        return this;
+    },
+    // Standalone function assigned to a property
+    multiply: function(a, b) {
+        return a * b;
+    }
+};
+
+calculator.add(5);        // 'this' refers to calculator
+calculator.multiply(3, 4); // Works like a normal function
+```
+
+The key difference is how this behaves. Methods called as object.method() have this bound to the object. Standalone functions have this determined by how they're called (strict mode vs. non-strict mode).
+
+Arrow Functions
+
+Arrow functions are a shorter syntax introduced in ES6, but more importantly, they behave differently with this:
+
+```js
+const traditional = function() {
+    console.log(this);  // Depends on caller
+};
+
+const arrow = () => {
+    console.log(this);  // Inherits from surrounding scope
+};
+
+const obj = {
+    name: "My Object",
+    traditional: function() {
+        console.log(this.name);  // "My Object"
+    },
+    arrow: () => {
+        console.log(this.name);  // undefined (or outer 'this')
+    }
+};
+
+obj.traditional();  // "My Object"
+obj.arrow();        // undefined
+```
+
+Arrow functions do not have their own this binding, cannot be used as constructors (no new), and do not have a prototype property.
+
+Key Takeaways
+
+· All functions are objects, but not all objects are functions
+· Functions can have their own properties and methods
+· The Function constructor exists but should almost never be used
+· Methods are functions attached to objects with a this context
+· Arrow functions provide lexical this binding and a concise syntax
+
+---
 
 ## Proposed: Records/Tuples
 
